@@ -1,4 +1,4 @@
-Your Game License
+Kaif NM-GC-CM License
 =================
 
 1. **Non-Commercial Use Only**
