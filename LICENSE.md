@@ -1,4 +1,4 @@
-Your Game License
+Kaif NM-GC-CM License
 =================
 
 1. **Non-Commercial Use Only**
@@ -19,7 +19,7 @@ Your Game License
 6. **Prohibited Actions**
    - You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
 
-This license does not grant you any rights to use the game’s name, logos, or trademarks.
+All trademarks belong to Kaif.
 
 For any questions or permissions beyond the scope of this license, please contact the original authors.
 
