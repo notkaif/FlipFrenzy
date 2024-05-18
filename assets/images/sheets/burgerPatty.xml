@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="burgerPatty.png">
+	<!-- Created with Adobe Animate version 24.0.3.19 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="burgerPatty0000" x="5" y="5" width="211" height="219"/>
+	<SubTexture name="burgerPatty0001" x="5" y="5" width="211" height="219"/>
+	<SubTexture name="burgerPatty0002" x="221" y="5" width="211" height="219"/>
+	<SubTexture name="burgerPatty0003" x="437" y="5" width="211" height="219"/>
+	<SubTexture name="cookedBurgerPatty0000" x="653" y="5" width="207" height="213"/>
+	<SubTexture name="pattyJuice0000" x="5" y="229" width="234" height="237"/>
+	<SubTexture name="pattySplat0000" x="244" y="229" width="207" height="213"/>
+</TextureAtlas>
