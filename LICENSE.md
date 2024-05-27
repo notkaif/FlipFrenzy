@@ -23,4 +23,6 @@ All trademarks belong to Kaif.
 
 For any questions or permissions beyond the scope of this license, please contact the original authors.
 
+NOTE: This license only applies to assets and code created by the author, and does not apply to assets created by other authors.
+
 2024 © Kaif
