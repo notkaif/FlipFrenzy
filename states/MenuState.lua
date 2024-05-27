@@ -1,16 +1,16 @@
 MenuState = {}
 
-require("states.CookerState")  -- Ensure the MenuState module is required
+require("states.CookerState") -- -- Make sure the CookerState is loaded so references to CookerState wont return a nil value
 
 local switchState = stateManager.switchState
-local getCurrentState = stateManager.getCurrentState
+
+local activateSound
 
 function MenuState:load()
-    -- Initialization code for the menu state
+    activateSound = love.audio.newSource("assets/audio/sounds/menu_activate.ogg", "static")
 end
 
 function MenuState:update(dt)
-    -- Update code for the menu state
 end
 
 function MenuState:draw()
@@ -21,12 +21,12 @@ function MenuState:draw()
 end
 
 function MenuState:keypressed(key)
-    -- Key pressed handling for the menu state
-
     if key == "return" then
-        print("Init")
+        print("Init CookerState")
         switchState(CookerState)
+        activateSound:setVolume(0.3)
+        activateSound:play()
     end
 end
 
-return MenuState  -- Make sure to return the state table
+return MenuState

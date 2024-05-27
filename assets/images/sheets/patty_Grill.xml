@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="patty_Grill.png">
+	<!-- Created with Adobe Animate version 24.0.3.19 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="cooked0000" x="5" y="5" width="207" height="213"/>
+	<SubTexture name="cooked_juicy0000" x="217" y="5" width="234" height="237"/>
+	<SubTexture name="overcooked0000" x="5" y="247" width="203" height="212"/>
+	<SubTexture name="raw0000" x="213" y="247" width="207" height="213"/>
+</TextureAtlas>
