@@ -1,4 +1,4 @@
-function love.conf(t)
+function love.conf(t) -- Config for the project
     t.version = "11.5"
     t.externalstorage = true
 
@@ -8,6 +8,8 @@ function love.conf(t)
     t.window.icon = nil
     t.window.width = 1280
     t.window.height = 720
+
+    t.renderers = {"metal", "opengl"}
 
     t.console = true
 end
