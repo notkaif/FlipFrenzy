@@ -3,12 +3,11 @@ local function switchState(state)
         currentState = state
         if currentState.load then
             currentState:load()
-            print("Initializing state: "..tostring(currentState.name))
-            else
-                print("Warning: Attempted to switch to state but it does not have a load function") -- Should avoid this for drawing
+        else
+            print("Warning: Attempted to switch to state but it does not have a load function")     -- Should avoid this for drawing
         end
     else
-        print("Error: Attempted to switch to a nil state")  -- Should not happen, error handling
+        print("Error: Attempted to switch to a nil state") -- Should not happen, error handling
     end
 end
 
