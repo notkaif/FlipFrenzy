@@ -37,17 +37,18 @@ function CookerState:load()
         testPatty.rotation = 0
         testPatty.size = 0.7
         testPatty.spriteType = "patty"
-        
+
         testPatty.cookingData = {
             state = "raw",
+            isCooking = false,
             cookingPercentage = 0,
+            meterSize = 0,
         }
         testPatty.popped = false
 
         grillImage = love.graphics.newImage("assets/images/grill.png")
         cookingSound = love.audio.newSource("assets/audio/sounds/sizzling.ogg", "static")
         leaveSound = love.audio.newSource("assets/audio/sounds/menu_leave.ogg", "static")
-
     end
 
     CookerState.initialized = true
@@ -69,17 +70,22 @@ function CookerState:update(dt)
                 sprite.size = 0.75
                 sprite.x = love.mouse.getX() - 72
                 sprite.y = love.mouse.getY() - 72
+
                 cookingSound:stop()
             else
                 if sprite.popped then
                     love.audio.newSource("assets/audio/sounds/pop2.mp3", "static"):play()
                     sprite.popped = false
                 end
+
                 sprite.size = 0.7
                 if sprite.x >= 120 and sprite.x <= 880 and sprite.y >= 150 and sprite.y <= 610 then
                     timer = timer + dt
                     cookingSound:setLooping(true)
                     cookingSound:play()
+
+                    cookingData.isCooking = true
+
                     if timer >= 1 then
                         timer = timer - 1
                         cookingData.cookingPercentage = cookingData.cookingPercentage +
@@ -88,6 +94,7 @@ function CookerState:update(dt)
                     end
                 else
                     cookingSound:stop()
+                    cookingData.isCooking = false
                 end
 
                 if cookingData.cookingPercentage >= 100 then
@@ -116,6 +123,13 @@ function CookerState:draw()
 
     for _, sprite in pairs(spriteList) do
         sprite:draw(sprite.x, sprite.y, sprite.rotation, sprite.size)
+        if sprite.spriteType == "patty" and sprite.cookingData.isCooking then
+            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.rectangle("fill", sprite.x + 170, sprite.y + 30, 20, 90)
+            love.graphics.setColor(1, 1, 1, 1)
+            love.graphics.rectangle("fill", sprite.x + 170, sprite.y + 120 - sprite.cookingData.cookingPercentage, 20,
+                sprite.cookingData.cookingPercentage)
+        end
     end
 
     love.graphics.print("Press 'ESCAPE' to return back to the menu.", 10, 700)
