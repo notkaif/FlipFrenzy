@@ -36,18 +36,18 @@ function CookerState:load()
         testPatty.y = 142
         testPatty.rotation = 0
         testPatty.size = 0.7
-
-
+        testPatty.spriteType = "patty"
+        
         testPatty.cookingData = {
             state = "raw",
             cookingPercentage = 0,
         }
-        testPatty.spriteType = "patty"
         testPatty.popped = false
 
         grillImage = love.graphics.newImage("assets/images/grill.png")
         cookingSound = love.audio.newSource("assets/audio/sounds/sizzling.ogg", "static")
         leaveSound = love.audio.newSource("assets/audio/sounds/menu_leave.ogg", "static")
+
     end
 
     CookerState.initialized = true
@@ -83,7 +83,7 @@ function CookerState:update(dt)
                     if timer >= 1 then
                         timer = timer - 1
                         cookingData.cookingPercentage = cookingData.cookingPercentage +
-                        (100 / COOK_TIMINGS[cookingData.state])
+                            (100 / COOK_TIMINGS[cookingData.state])
                         print(cookingData.cookingPercentage)
                     end
                 else
@@ -112,12 +112,13 @@ end
 
 function CookerState:draw()
     love.graphics.draw(grillImage, 61.2, 25, 0, 1.3, 1.3)
-    love.graphics.print("Press 'ESCAPE' to return back to the menu.")
     love.graphics.print("CookerState", 1190, 10)
 
     for _, sprite in pairs(spriteList) do
         sprite:draw(sprite.x, sprite.y, sprite.rotation, sprite.size)
     end
+
+    love.graphics.print("Press 'ESCAPE' to return back to the menu.", 10, 700)
 end
 
 function CookerState:keypressed(key)
