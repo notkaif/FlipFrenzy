@@ -9,7 +9,7 @@ function love.conf(t) -- Config for the project
     t.window.width = 1280
     t.window.height = 720
 
-    t.renderers = {"metal", "opengl"}
+    t.renderers = { "metal", "opengl" }
 
     t.console = true
 end

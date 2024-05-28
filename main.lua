@@ -34,11 +34,14 @@ function love.draw()
         currentState:draw()
     end
 
-        -- Temporary debug printing
+    -- Temporary debug printing
 
-        love.graphics.print("notkaif", 1230, 700)
-        love.graphics.print(string.format("FPS: %d", love.timer.getFPS()), 10, 10)
-        love.graphics.print(string.format("Memory Usage: %.2f MB", collectgarbage("count") / 1024), 10, 30)
+    love.graphics.print("notkaif", 1220, 700)
+
+    love.graphics.setFont(fontList["vcr"])
+    love.graphics.print(string.format("FPS: %d", love.timer.getFPS()), 10, 10)
+    love.graphics.print(string.format("Memory Usage: %.2f MB", collectgarbage("count") / 1024), 10, 25)
+    love.graphics.print("FlipFrenzy inDev v1.1.1", 10, 40)
 end
 
 function love.keypressed(key)

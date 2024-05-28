@@ -63,7 +63,7 @@ function SpriteHandler.new() -- Creating a new sprite
 		paused = true
 	end
 
-	function self:Resume() -- Resumes the current animation
+	function self:Resume()                                  -- Resumes the current animation
 		if currentFrame >= #animations[currentAnimation] + 1 then -- If resumed when animation was fully complete, it will play the animation again.
 			currentFrame = 1
 		end
@@ -105,10 +105,10 @@ function SpriteHandler.new() -- Creating a new sprite
 	end
 
 	function self:Destroy()
-        image = nil
-        animations = {}
+		image = nil
+		animations = {}
 		self = nil
-    end
+	end
 
 	return self
 end
