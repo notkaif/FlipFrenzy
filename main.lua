@@ -15,21 +15,37 @@ function love.load()
     GFJingle:setVolume(0.6)
     GFJingle:play()
 
+    -- PRELOAD MENU SOUNDS
+
+    audioTable.menu_activate = love.audio.newSource("assets/audio/sounds/menu_activate.ogg", "static")
+    audioTable.menu_ding = love.audio.newSource("assets/audio/sounds/menu_ding.ogg", "static")
+    audioTable.menu_leave = love.audio.newSource("assets/audio/sounds/menu_leave.ogg", "static")
+
     -- Switches to the MenuState cause the game just started.
 
     switchState(MenuState)
 end
 
 function love.update(dt)
+    currentMouseState = love.mouse.isDown(1)
+
     -- Calls the current state's "update" function when game updates
 
     if currentState and currentState.update then
         currentState:update(dt)
     end
+
+
+    if CookerState.initialized and currentState ~= CookerState then
+        CookerState:update(dt)
+    end
+
+    lastMouseState = currentMouseState
 end
 
 function love.draw()
     -- Calls the current state's "draw" function when game draws
+
     if currentState and currentState.draw then
         currentState:draw()
     end

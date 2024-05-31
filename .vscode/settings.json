@@ -3,6 +3,8 @@
         "undefined-field"
     ],
     "Lua.diagnostics.globals": [
-        "currentState"
+        "currentState",
+        "currentMouseState",
+        "lastMouseState"
     ]
 }

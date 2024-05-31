@@ -1,116 +1,132 @@
 local SpriteHandler = {}
 
-function SpriteHandler.new() -- Creating a new sprite
-	local self = {}
+function SpriteHandler.new()
+    local self = {
+        image = nil,
+        animations = {},
+        currentAnimation = nil,
+        currentFrame = 1,
+        paused = false,
+        fps = 24,
+        checked = false,
+        isMouseTouching = false,
+        width = 0,
+        height = 0
+    }
 
-	local image               -- Sets spritesheet image
-	local animations = {}     -- Table with all possible animations in the spritesheet
+    -- Set the image for the sprite handler
+    function self:setImage(imgPath)
+        self.image = love.graphics.newImage(imgPath)
+    end
 
-	local currentAnimation = nil -- Current animation to be played
-	local currentFrame = 1    -- Current frame of the animation
-	local paused = false      -- Animation paused or not
-	local fps = 24            -- Animation playback FPS
+    -- Parse XML and set animations STARLING AND SPARROW V2 LIMITED FUNCTIONALITY
+    function self:setXML(filePath)
+        local data = love.filesystem.read(filePath)
+        if not data then
+            print("Error: Could not read file " .. filePath)
+            return
+        end
 
-	local checked = false
-	local isMouseTouching = false
+        local imageWidth = self.image:getWidth()
+        local imageHeight = self.image:getHeight()
 
-	function self:setImage(imgPath) -- Sets the spritesheet image
-		image = love.graphics.newImage(imgPath)
-	end
+        for name, x, y, width, height in data:gmatch('<SubTexture name="([^"]+)" x="(%d+)" y="(%d+)" width="(%d+)" height="(%d+)"') do
+            local animationName = name:match("([^%d]+)")
+            if not self.animations[animationName] then
+                self.animations[animationName] = {}
+            end
 
-	function self:setXML(filePath) -- Sets the spritesheets XML data (Sparrow v2 or Starling format half supported)
-		local data = love.filesystem.read(filePath)
-		local _, _, imagePath = data:find('imagePath="([^"]+)"')
+            self.width = tonumber(width)
+            self.height = tonumber(height)
+            table.insert(self.animations[animationName], {
+                quad = love.graphics.newQuad(
+                    tonumber(x), tonumber(y),
+                    tonumber(width), tonumber(height),
+                    imageWidth, imageHeight
+                ),
+                width = tonumber(width),
+                height = tonumber(height),
+                offsetX = 0,
+                offsetY = 0
+            })
+        end
+    end
 
-		for name, x, y, width, height in
-		data:gmatch('<SubTexture name="([^"]+)" x="(%d+)" y="(%d+)" width="(%d+)" height="(%d+)"')
-		do
-			local animationName = name:match("([^%d]+)")
-			animations[animationName] = animations[animationName] or {}
-			table.insert(animations[animationName], {
-				quad = love.graphics.newQuad(
-					tonumber(x),
-					tonumber(y),
-					tonumber(width),
-					tonumber(height),
-					image:getWidth(),
-					image:getHeight()
-				),
-				width = tonumber(width),
-				height = tonumber(height),
-			})
-		end
-	end
+    -- Set frames per second
+    function self:setFPS(fps)
+        self.fps = fps
+    end
 
-	function self:setFPS(f) -- Sets the animation playback FPS
-		fps = f
-	end
+    -- Play a specified animation
+    function self:play(animationName)
+        if self.animations[animationName] then
+            self.currentAnimation = animationName
+            self.currentFrame = 1
+        else
+            print("Animation '" .. animationName .. "' not found.")
+        end
+    end
 
-	function self:Play(animationName) -- Plays the animation passed through
-		if animations[animationName] then
-			currentAnimation = animationName
-			currentFrame = 1
-		else
-			print("Animation '" .. animationName .. "' not found.")
-		end
-	end
+    -- Stop the current animation
+    function self:stop()
+        self.currentAnimation = nil
+    end
 
-	function self:Stop() -- Stops the current animation
-		currentAnimation = nil
-	end
+    -- Pause the current animation
+    function self:pause()
+        self.paused = true
+    end
 
-	function self:Pause() -- Pauses the current animation
-		paused = true
-	end
+    -- Resume the current animation
+    function self:resume()
+        self.paused = false
+    end
 
-	function self:Resume()                                  -- Resumes the current animation
-		if currentFrame >= #animations[currentAnimation] + 1 then -- If resumed when animation was fully complete, it will play the animation again.
-			currentFrame = 1
-		end
-		paused = false
-	end
+    -- Check if the mouse is touching the sprite
+    function self:mouseTouching()
+        if self.checked then
+            self.checked = false
+            return self.isMouseTouching
+        end
+    end
 
-	function self:MouseTouching()
-		if checked then
-			checked = false
-			return isMouseTouching
-		end
-	end
+    -- Update the sprite handler
+    function self:update(dt)
+        if self.currentAnimation and not self.paused then
+            self.currentFrame = self.currentFrame + self.fps * dt
+            if self.currentFrame >= #self.animations[self.currentAnimation] + 1 then
+                self.currentFrame = 1
+            end
+        end
+    end
 
-	function self:update(dt) -- Updates the animation each frame
-		if currentAnimation and not paused then
-			currentFrame = currentFrame + fps * dt
-			if currentFrame >= #animations[currentAnimation] + 1 then
-				return "animFinish"
-			end
-		end
-	end
+    -- Draw the sprite at a given position
+    function self:draw(x, y, rotation, size)
+        if self.currentAnimation then
+            local animationFrames = self.animations[self.currentAnimation]
+            local frame = math.min(math.floor(self.currentFrame), #animationFrames)
+            local animation = animationFrames[frame]
+            local quad = animation.quad
+            local width = animation.width
+            local height = animation.height
+            local offsetX = animation.offsetX
+            local offsetY = animation.offsetY
 
-	function self:draw(x, y, rotation, sizeMultiplier) -- Draws the sprite at the x and y provided
-		if currentAnimation then
-			local animationFrames = animations[currentAnimation]
-			local frame = math.min(math.floor(currentFrame), #animationFrames)
-			local animation = animationFrames[frame]
-			local quad = animation.quad
-			local width = animation.width * sizeMultiplier
-			local height = animation.height * sizeMultiplier
+            local mouseX, mouseY = love.mouse.getPosition()
 
-			local mouseX, mouseY = love.mouse.getPosition()
+            self.checked = true
+            self.isMouseTouching = mouseX >= x - width/2 and mouseX <= x + width/2 and mouseY >= y - height/2 and mouseY <= y + height/2
+            love.graphics.draw(self.image, quad, x - offsetX, y - offsetY, rotation, size, size, width/2, height/2)
+        end
+    end
 
-			checked = true
-			isMouseTouching = mouseX >= x and mouseX <= x + width and mouseY >= y and mouseY <= y + height
+    -- Deletes the sprite
+    function self:destroy()
+        self.image = nil
+        self.animations = {}
+    end
 
-			love.graphics.draw(image, quad, x, y, rotation, sizeMultiplier, sizeMultiplier)
-		end
-	end
-
-	function self:Destroy()
-		image = nil
-		animations = {}
-		self = nil
-	end
-
-	return self
+    return self
 end
 
 return SpriteHandler
